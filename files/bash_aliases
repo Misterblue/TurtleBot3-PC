@@ -1,0 +1,17 @@
+#! /bin/bash
+# Put in the user's ".bash_aliases" as a way of adding commands to the
+#   login startup without fiddling with ".bashrc".
+
+# unalias ls
+
+PS1="\u@\h \w> "
+
+PATH="$PATH:~/bin"
+
+export DISPLAY=:20
+
+echo "Sourcing /opt/ros/foxy/setup.bash"
+source /opt/ros/foxy/setup.bash
+
+export ROS_DOMAIN_ID=${ROS_DOMAIN:-30}
+echo "Setting ROS_DOMAIN_ID=$ROS_DOMAIN_ID"
