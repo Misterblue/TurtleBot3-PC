@@ -14,7 +14,6 @@ I created this image because:
 
 The operation of this image is kinda kludgey because I have a love/hate
 relationship with X11 and all its packages and permissions.
-The operation of this image is not very smooth.
 The process is:
 
 1. SSH to the headless Linux system that will be running the Docker container
@@ -30,6 +29,7 @@ The environment variable `ROS_DOMAIN` sets the ROS2 domain id. This defaults to 
 `.bash_aliases` which is initialized in the Docker image from `files/bash_aliases` [1].
 
 [1]: I put my per-user login script changes in `.bash_aliases` since it is sourced near the end if `.bashrc` and thus my changes are easy to copy and don't mess up the default `.bashrc`.
+
 [UltraVNC]: https://www.uvnc.com/
 [Turtlebot3]: https://emanual.robotis.com/docs/en/platform/turtlebot3/overview/
 [Xfce4]: https://www.xfce.org/
