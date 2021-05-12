@@ -6,7 +6,7 @@ on:
   # Create Docker image on push to 'master'
   push:
     branches:
-      - master
+      - main
 
 env:
   # Names used to tag built Docker image
