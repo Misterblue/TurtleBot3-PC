@@ -1,7 +1,6 @@
 #! /bin/bash
-# Start the Turtlebot3 PC docker image
-# Once started, connect graphicly with Remote Desktop Connection (RDP)
-#    or exec into it with bash.
+# Start the Turtlebot3 PC docker image.
+# Once started, connect graphicly with VNC.
 # The ROS_DOMAIN_ID is set to 30 or the environment variable unless there is
 #    a parameter on the invocation of this script:
 #         ./run-turtlebotpc.sh 31
@@ -12,16 +11,18 @@ if [[ ! -z "$1" ]] ; then
 else
     ROS_DOMAIN_ID=${ROS_DOMAIN_ID:-30}
 fi
-echo 
+echo "Setting ROS_DOMAIN_ID=${ROS_DOMAIN_ID}"
 
-docker run -t -d \
+docker run \
+    -t \
+    -d \
     --rm \
     --name=turtlebotpc \
     -e ROS_DOMAIN=${ROS_DOMAIN_ID} \
     --network=host \
     --privileged \
-    turtlebotpc:latest
+    ghcr.io/misterblue/turtlebotpc:latest
 
-# ghcr.io/misterblue/turtlebotpc
+# turtlebotpc:latest
 #    --restart=unless-stopped
     
