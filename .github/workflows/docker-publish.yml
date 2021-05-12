@@ -11,8 +11,6 @@ on:
 env:
   # Names used to tag built Docker image
   IMAGE_NAME: turtlebotpc
-  # The local Docker image is named env.IMAGE_TAG so it can be referenced and pushed
-  IMAGE_TAG: turtlebotpc:latest
 
 jobs:
   push:
@@ -28,17 +26,13 @@ jobs:
 
       - name: Setup Docker Buildx
         uses: docker/setup-buildx-action@v1
-        
-      - name: Build
-        uses: docker/build-push-action@v2
-        with:
-          context: .
-          # platforms: linux/amd64,linux/arm64
-          platforms: linux/amd64
-          tags: ${{ env.IMAGE_TAG }}
-          push: false
 
-      # Login to Github Container Registry with this registry's tokens
+      # Work around (see https://github.com/docker/build-push-action/issues/37)
+      # Docker does not allow mixed-case names and the repository_owner is capitalized
+      - name: Lowercase necessary symbols
+        run: |
+            echo REPOSITORY_OWNER=$(echo ${{ github.repository_owner }} | tr '[:upper:]' '[:lower:]') >> $GITHUB_ENV
+        
       - name: Login to Github Container registry
         uses: docker/login-action@v1
         with:
@@ -46,9 +40,14 @@ jobs:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.GITHUB_TOKEN }}
         
-      - name: Push to Github Container Registry
-        run: |
-          # docker image tag ${{ env.IMAGE_TAG }} ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}:latest
-          docker image push --all-tags ghcr.io/${{ github.repository_owner }}/${{ env.IMAGE_NAME }}
+      - name: Build and push
+        uses: docker/build-push-action@v2
+        with:
+          context: .
+          # platforms: linux/amd64,linux/arm64
+          platforms: linux/amd64
+          push: true
+          tags: |
+            ghcr.io/${{ env.REPOSITORY_OWNER }}/${{ env.IMAGE_NAME }}:latest
 
 # vim: tabstop=2 shiftwidth=2 autoindent expandtab
